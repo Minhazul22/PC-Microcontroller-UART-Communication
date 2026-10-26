@@ -1,20 +1,20 @@
 # PC–Microcontroller UART Communication: Four-LED Control
 
-A documentation-focused embedded-systems laboratory project describing a PC terminal interface for controlling four user LEDs on the Texas Instruments Tiva TM4C1294XL evaluation board over UART.
+A documentation-focused embedded-systems laboratory project describing a PC terminal interface for controlling four user LEDs on the TI Tiva TM4C1294XL evaluation board over UART.
 
-> **Source-code note:** The original laboratory implementation is not included in this repository because permission to redistribute it has not been granted. This repository documents the design and reported behavior only; it does not claim to provide a reproducible firmware build.
+> **Source-code note:** The original laboratory implementation is not included because permission to redistribute it has not been granted. This repository documents the design and reported behavior; it does not claim to provide a reproducible firmware build.
 
 ## Project Overview
 
-The laboratory task explores how a PC can communicate with a microcontroller over a serial UART interface. A terminal sends text commands; the microcontroller interprets the command and controls one of four user LEDs. A board switch (SW1) is used to report which LEDs are currently on.
+The laboratory task explores communication between a PC and a microcontroller using a UART serial interface. The PC terminal sends text commands; the microcontroller interprets the action and LED number to turn one of four user LEDs on, off, or toggle its state. A board switch (SW1) is used to report which LEDs are currently on.
 
 ## Goals
 
 - Receive text commands through UART0.
-- Parse a command to identify one of four user LEDs.
-- Turn a selected LED on, turn it off, or toggle its state.
+- Determine the requested operation and LED number.
+- Turn the selected LED on, turn it off, or toggle it.
 - Use SW1 to report the current LED states to the terminal.
-- Configure UART communication using a target baud rate of 9600 bit/s.
+- Configure serial communication for a target baud rate of 9600 bit/s.
 
 ## Hardware and Tools
 
@@ -23,58 +23,60 @@ The laboratory task explores how a PC can communicate with a microcontroller ove
 | TI Tiva TM4C1294XL evaluation board | Microcontroller platform and user LEDs |
 | PC terminal | Sends control commands and displays status |
 | UART0 | Serial communication interface |
-| SW1 | User input for requesting LED-state feedback |
+| SW1 | Requests LED-state feedback |
 | Code Composer Studio | Development/debug environment described in the lab material |
 
-The lab presentation describes a UART0 configuration targeting 9600 bit/s with an 8-N-1 serial format. The actual firmware source is intentionally not redistributed here.
+The presentation describes UART0 with a target rate of 9600 bit/s and an 8-N-1 serial format, using a 16 MHz system-clock assumption for the baud-rate calculation. These are the documented lab settings, not a new independent measurement.
 
 ## Command Model
 
-The presentation flowchart shows a command-processing loop that checks an input character for one of three actions:
+The presentation's flowchart shows three action characters:
 
-| Action character | Intended action |
+| Character | Meaning |
 |---|---|
 | `+` | Turn the selected LED on |
 | `-` | Turn the selected LED off |
 | `~` | Toggle the selected LED |
 
-The command also identifies an LED number from 1 to 4. The flowchart includes an invalid-LED-number path. Exact terminal syntax, delimiters, and response strings should be confirmed from permitted notes or a demo; they are not specified fully in this documentation.
+The flowchart branches for LED numbers 1 through 4 and includes an invalid-LED-number path. The exact command grammar, separators, and terminal response strings are not fully specified in this public summary; they are not guessed here.
 
 ## System Flow
 
 1. The user enters a command in the PC terminal.
 2. The command is received over UART0.
-3. The microcontroller checks the action and determines the LED number.
-4. The firmware selects the corresponding LED operation.
-5. Invalid LED numbers follow an error-handling path.
-6. SW1 is used to request a report of the LEDs that are currently on.
+3. The firmware identifies the action and LED number.
+4. The selected LED operation is performed, or the invalid-number path is taken.
+5. SW1 is used to request a report of the LEDs that are currently on.
+
+See the [system overview](docs/system-overview.md) and the [command model and proposed test matrix](docs/command-protocol.md). An original flow diagram is available in [Mermaid source format](diagrams/uart-command-flow.mmd).
 
 ## Reported Results
 
-The accompanying lab presentation states that the tasks were completed with the expected output. This statement reflects the reported laboratory result; no independent re-test is claimed in this repository.
+The accompanying lab presentation states that the tasks were completed with the expected output. This is reported academic project context; no independent retest is claimed by this repository.
 
-## Repository Structure
+## Repository Contents
 
-- `README.md` — overview of the project, command model, and reported behavior.
-- `docs/` — supporting design notes.
-- `diagrams/` — an original flow diagram may be added here if permitted.
+- [System overview](docs/system-overview.md) — components, conceptual data flow, and documented UART settings.
+- [Command protocol](docs/command-protocol.md) — action meanings, known gaps, and a proposed manual test matrix.
+- [UART command flow diagram](diagrams/uart-command-flow.mmd) — editable Mermaid diagram authored for this repository.
 
 ## Limitations
 
-- Firmware source code is not included due to redistribution permission constraints.
-- The exact UART command syntax and terminal output are not fully specified here.
+- Firmware source code is omitted due to redistribution permission constraints.
+- The exact command syntax and terminal output are not fully documented here.
+- The test matrix is a proposed checklist; tests should only be marked as passed after executing them.
 - No new measurements or independent hardware tests are claimed.
-- This repository describes a university laboratory exercise; consult the relevant course rules before sharing original slides, handouts, or figures.
+- Check university rules before sharing original slides, handouts, or figures. The diagram in this repository is an original summary rather than a copy of the slide image.
 
 ## Skills Demonstrated
 
 - UART serial communication concepts
 - Embedded command parsing
-- Digital GPIO/peripheral control
+- GPIO/peripheral control
 - Handling multiple command actions and invalid input
-- Switch input and reporting peripheral state
-- Hardware/software integration and lab verification
+- Switch input and peripheral-state reporting
+- Hardware/software integration and laboratory verification
 
 ## Academic Context
 
-Based on a Micro-Controller Lab 4 exercise on controlling a microcontroller from a PC via UART. The original C implementation is omitted; this repository is intended as a portfolio-oriented design summary, not a replacement for the restricted course materials.
+Based on a Micro-Controller Lab 4 exercise on controlling a microcontroller from a PC via UART. This repository is a portfolio-oriented design summary, not a replacement for restricted course materials.
