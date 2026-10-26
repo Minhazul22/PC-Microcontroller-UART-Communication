@@ -1,0 +1,41 @@
+flowchart TD
+    START([Start]) --> INIT[Initialize command index]
+    INIT --> READ[Inspect command-line character]
+    READ --> ACTIONCHAR{Character is +, -, or ~?}
+    ACTIONCHAR -->|Yes| LEDNUM[Determine LED number]
+    ACTIONCHAR -->|No / other character| NEXT[Continue command parsing]
+    LEDNUM --> SELECT{LED number}
+    SELECT -->|1| A1{Action}
+    SELECT -->|2| A2{Action}
+    SELECT -->|3| A3{Action}
+    SELECT -->|4| A4{Action}
+    SELECT -->|Invalid| BAD[Handle invalid LED number]
+    A1 -->|+| L1ON[Turn on LED 1]
+    A1 -->|-| L1OFF[Turn off LED 1]
+    A1 -->|~| L1TOGGLE[Toggle LED 1]
+    A2 -->|+| L2ON[Turn on LED 2]
+    A2 -->|-| L2OFF[Turn off LED 2]
+    A2 -->|~| L2TOGGLE[Toggle LED 2]
+    A3 -->|+| L3ON[Turn on LED 3]
+    A3 -->|-| L3OFF[Turn off LED 3]
+    A3 -->|~| L3TOGGLE[Toggle LED 3]
+    A4 -->|+| L4ON[Turn on LED 4]
+    A4 -->|-| L4OFF[Turn off LED 4]
+    A4 -->|~| L4TOGGLE[Toggle LED 4]
+    L1ON --> MERGE[Continue processing]
+    L1OFF --> MERGE
+    L1TOGGLE --> MERGE
+    L2ON --> MERGE
+    L2OFF --> MERGE
+    L2TOGGLE --> MERGE
+    L3ON --> MERGE
+    L3OFF --> MERGE
+    L3TOGGLE --> MERGE
+    L4ON --> MERGE
+    L4OFF --> MERGE
+    L4TOGGLE --> MERGE
+    BAD --> MERGE
+    NEXT --> MERGE
+    MERGE --> MORE{More characters to process?}
+    MORE -->|Yes| READ
+    MORE -->|No| END([End command parsing])
